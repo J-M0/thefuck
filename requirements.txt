@@ -4,7 +4,6 @@ mock
 pytest-mock
 build
 pexpect
-pypandoc
 pytest-benchmark
 pytest-docker-pexpect
 twine

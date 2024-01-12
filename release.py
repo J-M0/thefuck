@@ -1,27 +1,19 @@
 #!/usr/bin/env python
 from subprocess import call
-import os
 import re
 
+with open('setup.cfg', 'r') as sf:
+    lines = sf.readlines()
 
-version = None
+for i, line in enumerate(lines):
+    match = re.match(r"version = (\d+)\.(\d+)", line)
+    if match:
+        major, minor = match.groups()
+        version = "{}.{}".format(major, int(minor) + 1)
+        lines[i] = "version = {}\n".format(version)
+        break
 
-
-def get_new_setup_py_lines():
-    global version
-    with open('setup.py', 'r') as sf:
-        current_setup = sf.readlines()
-    for line in current_setup:
-        if line.startswith('VERSION = '):
-            major, minor = re.findall(r"VERSION = '(\d+)\.(\d+)'", line)[0]
-            version = "{}.{}".format(major, int(minor) + 1)
-            yield "VERSION = '{}'\n".format(version)
-        else:
-            yield line
-
-
-lines = list(get_new_setup_py_lines())
-with open('setup.py', 'w') as sf:
+with open('setup.cfg', 'w') as sf:
     sf.writelines(lines)
 
 call('git pull', shell=True)
@@ -30,8 +22,6 @@ call('git tag {}'.format(version), shell=True)
 call('git push', shell=True)
 call('git push --tags', shell=True)
 
-env = os.environ
-env['CONVERT_README'] = 'true'
-call('rm -rf dist/*', shell=True, env=env)
+call('rm -rf dist/*', shell=True)
 call('pyproject-build')
-call('twine upload dist/*', shell=True, env=env)
+call('twine upload dist/*', shell=True)

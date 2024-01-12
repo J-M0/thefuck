@@ -1,1 +1,6 @@
-
+graft scripts
+graft tests
+include tox.ini
+include CONTRIBUTING.md
+include example.gif
+include example_instant_mode.gif

@@ -1,0 +1,4 @@
+[build-system]
+# setuptools 44.1.1 is the last version to support python 2
+requires = ["setuptools == 44.1.1", "wheel"]
+build-backend = "setuptools.build_meta"
